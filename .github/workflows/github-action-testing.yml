@@ -1,13 +1,33 @@
-name: learn-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions
-on: [push]
+name: Django Tests
+
+on:
+    push:
+        branches: 
+            [master]
+    pull_request:
+        branches: 
+            [master]
+    
 jobs:
-  check-bats-version:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-      - run: npm install -g bats
-      - run: bats -v
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python 3.8
+              uses: actions/setup-python@v2
+              with:
+                python-version: 3.7
+            - name: Install Dependencies
+              run: |
+                    pytho3 -m pip3 install --upgrade pip3
+                    pip3 install -r requirements.txt
+            - name: Linting
+              run: |
+                    flake8 .
+            - name: Run Tests
+              run: |
+                    python3 manage.py test
+
+
+
